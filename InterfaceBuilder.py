@@ -1,15 +1,6 @@
-# import pandas as pd
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
-
-# Data
-selected_features = set()
-selected_labels = set()
-eta = 0.01
-epochs = 100
-include_bias = True
-
 
 class InterfaceBuilder:
     common_style = {
