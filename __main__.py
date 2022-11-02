@@ -1,4 +1,5 @@
 from InterfaceBuilder import InterfaceBuilder
+from tasks.task1 import task1
 
 config = {
     'selected_features': set(),
@@ -7,7 +8,6 @@ config = {
     'epochs': 100,
     'include_bias': False,
 }
-
 
 def selected_feature_changed(feature):
     config['selected_features'].add(feature)
@@ -38,8 +38,7 @@ def include_bias_changed(value):
 
 
 def sumbit_handler():
-    print(config)
-
+    task1()
 
 builder = InterfaceBuilder(title="Single layer preceptron", data=None)
 builder.lay_cmb_selection("Feature Selection", [
