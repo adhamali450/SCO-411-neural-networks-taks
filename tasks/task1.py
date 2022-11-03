@@ -1,56 +1,68 @@
 from models.perceptron import Perceptron
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 
 
+class Task1:
+    def __init__(self) -> None:
+        self.df = pd.read_csv("data/penguins.csv")
+        self.labels = list(set(self.df["species"]))
+        self.features = list(set(self.df.drop(["species"], axis=1).columns))
 
-def task1():
-  df = pd.read_csv('data/penguins.csv')
+    def run(self, config) -> None:
+        # fill nulls values in gender
+        self.df = self.df.fillna("Unknown")
+        species_encoder = LabelEncoder()
+        species_encoder.fit(self.df["species"])
 
-  #fill nulls values in gender
-  df = df.fillna("Unknown")
-  
-  #spilt samples into 3 df of 50
-  df1 = df.iloc[:50]
-  df2 = df.iloc[50:100]
-  df3 = df.iloc[100:]
+        gender_encoder = LabelEncoder()
+        gender_encoder.fit(self.df["gender"])
 
-  X1 = df1.drop(['species'],axis=1)
-  Y1 = df1['species']
+        classes = list(config["selected_labels"])
+        class1 = classes[0]
+        class2 = classes[1]
 
+        # filter data
+        df1 = self.df[self.df["species"] == class1]
+        df2 = self.df[self.df["species"] == class2]
 
-  X2 = df2.drop(['species'],axis=1)
-  Y2 = df2['species']
-  
+        # FIXME: encoder makes some kind of warning
 
-  X3 = df3.drop(['species'],axis=1)
-  Y3 = df3['species'] 
-  
+        # encode species and gender columns
+        df1["species"] = species_encoder.transform(df1["species"])
+        df2["species"] = species_encoder.transform(df2["species"])
 
-  #train test split
-  x_train1, x_test1, y_true_train1, y_true_test1 = train_test_split(X1, Y1, test_size=0.3, shuffle=True, random_state=10)
+        df1["gender"] = gender_encoder.transform(df1["gender"])
+        df2["gender"] = gender_encoder.transform(df2["gender"])
 
-  x_train2, x_test2, y_true_train2, y_true_test2 = train_test_split(X2, Y2, test_size=0.3, shuffle=True, random_state=10)
+        # filter features
+        features = list(config["selected_features"])
+        features.append("species")
+        df1 = df1[features]
+        df2 = df2[features]
 
-  x_train3, x_test3, y_true_train3, y_true_test3 = train_test_split(X3, Y3, test_size=0.3, shuffle=True, random_state=10)
+        X_train = pd.concat(
+            [
+                df1.drop(["species"], axis=1).iloc[:30],
+                df2.drop(["species"], axis=1).iloc[:30],
+            ]
+        )
+        Y_train = pd.concat([df1["species"].iloc[:30], df2["species"].iloc[:30]])
 
+        X_test = pd.concat(
+            [
+                df1.drop(["species"], axis=1).iloc[30:],
+                df2.drop(["species"], axis=1).iloc[30:],
+            ]
+        )
+        Y_test = pd.concat([df1["species"].iloc[30:], df2["species"].iloc[30:]])
 
+        # FIXME: training sample has good accuracy, but test sample has bad accuracy
 
-  
+        p = Perceptron(X_train, Y_train, bias=config["include_bias"])
 
-  #print(df.info())
-  #print(df[df.isna().any(axis=1)])
-  
+        p.train(lr=config["eta"], epochs=config["epochs"])
 
-  # X = df.drop(['species', 'gender'], axis=1)
-  # Y = df['species']
-  # encoder = LabelEncoder()
-  # Y = encoder.fit_transform(Y)
-
-
-
-  p = Perceptron(X, Y)
-
-  p.predict()
-
-  print(p.y_i)
+        y_pred = p.predict(X_test)
+        print(y_pred)
+        print(Y_test.values)
