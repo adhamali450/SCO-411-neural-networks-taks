@@ -12,7 +12,7 @@ class Perceptron:
     self.b = np.random.random()
 
 
-  def train(self,lr=0.1, epochs=1000) -> None:
+  def train(self,lr=0.01, epochs=1000) -> None:
     for _ in range(epochs):
       for i in range(self.X.shape[0]):
         x_i = self.X.iloc[i].values
