@@ -1,6 +1,10 @@
 from models.perceptron import Perceptron
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import f1_score
+from sklearn.metrics import mean_squared_error, r2_score
+
+
 
 
 class Task1:
@@ -12,8 +16,8 @@ class Task1:
     def run(self, config) -> None:
         # fill nulls values in gender
         self.df = self.df.fillna("Unknown")
-        species_encoder = LabelEncoder()
-        species_encoder.fit(self.df["species"])
+        # species_encoder = LabelEncoder()
+        # species_encoder.fit(self.df["species"])
 
         gender_encoder = LabelEncoder()
         gender_encoder.fit(self.df["gender"])
@@ -26,11 +30,16 @@ class Task1:
         df1 = self.df[self.df["species"] == class1]
         df2 = self.df[self.df["species"] == class2]
 
+        
+
         # FIXME: encoder makes some kind of warning
 
         # encode species and gender columns
-        df1["species"] = species_encoder.transform(df1["species"])
-        df2["species"] = species_encoder.transform(df2["species"])
+        # df1["species"] = species_encoder.transform(df1["species"])
+        # df2["species"] = species_encoder.transform(df2["species"])
+        df1["species"] = df1["species"].replace(class1 , 1)
+        df2["species"] = df2["species"].replace(class2 , -1)
+
 
         df1["gender"] = gender_encoder.transform(df1["gender"])
         df2["gender"] = gender_encoder.transform(df2["gender"])
@@ -64,5 +73,12 @@ class Task1:
         p.train(lr=config["eta"], epochs=config["epochs"])
 
         y_pred = p.predict(X_test)
+        sum = 0
+        print ()
+        for i in range (len(y_pred)):
+          if (y_pred[i] == Y_test.values[i]):
+            sum += 1
         print(y_pred)
         print(Y_test.values)
+        print(sum / len(y_pred))
+
