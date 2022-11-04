@@ -4,6 +4,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import f1_score
 from sklearn.metrics import mean_squared_error, r2_score
 from utils.confusion_matrix import ConfusionMatrix
+pd.options.mode.chained_assignment = None  # default='warn'
 
 
 
@@ -38,7 +39,6 @@ class Task1:
 
         
 
-        # FIXME: encoder makes some kind of warning
 
         # encode species and gender columns
 
