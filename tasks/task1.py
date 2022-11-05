@@ -1,12 +1,7 @@
 from models.perceptron import Perceptron
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import f1_score
-from sklearn.metrics import mean_squared_error, r2_score
 from utils.confusion_matrix import ConfusionMatrix
-pd.options.mode.chained_assignment = None  # default='warn'
-
-
 
 
 class Task1:
@@ -17,9 +12,8 @@ class Task1:
 
     def run(self, config) -> None:
 
-        #TODO : visualizations for report
-        #Write visualizations code here
-      
+        # TODO : visualizations for report
+        # Write visualizations code here
 
         # fill nulls values in gender
         self.df = self.df.fillna("Unknown")
@@ -37,14 +31,10 @@ class Task1:
         df1 = self.df[self.df["species"] == class1]
         df2 = self.df[self.df["species"] == class2]
 
-        
-
-
         # encode species and gender columns
 
-        df1["species"] = df1["species"].replace(class1 , 1)
-        df2["species"] = df2["species"].replace(class2 , -1)
-
+        df1 = df1.assign(species=1)
+        df2 = df2.assign(species=-1)
 
         df1["gender"] = gender_encoder.transform(df1["gender"])
         df2["gender"] = gender_encoder.transform(df2["gender"])
@@ -71,17 +61,13 @@ class Task1:
         )
         Y_test = pd.concat([df1["species"].iloc[30:], df2["species"].iloc[30:]])
 
-        
-
         p = Perceptron(X_train, Y_train, bias=config["include_bias"])
 
         p.train(lr=config["eta"], epochs=config["epochs"])
 
         y_pred = p.predict(X_test)
-       
 
-        cm = ConfusionMatrix(Y_test,y_pred,1,-1)
-        print("acc :" , cm.accuracy())
-        print("per :" , cm.precision())
-        print("recall :" , cm.recall())
-
+        cm = ConfusionMatrix(Y_test, y_pred, 1, -1)
+        print("acc :", cm.accuracy())
+        print("per :", cm.precision())
+        print("recall :", cm.recall())
