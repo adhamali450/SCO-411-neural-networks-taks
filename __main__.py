@@ -2,8 +2,8 @@ from InterfaceBuilder import InterfaceBuilder
 from tasks.task1 import Task1
 
 config = {
-    "selected_features": set(),
-    "selected_labels": set(),
+    "selected_features": {},
+    "selected_labels": {},
     "eta": 0.01,
     "epochs": 100,
     "include_bias": False,
@@ -12,12 +12,25 @@ config = {
 task = Task1()
 
 
-def selected_feature_changed(feature):
-    config["selected_features"].add(feature)
+def uniquely_add(cmb_event, dict):
+    val = cmb_event.widget.get()
+    id = cmb_event.widget.winfo_name()
+
+    # Don't add if exits
+    if val in list(dict.values()):
+        return
+
+    dict[id] = val
+
+    print(dict)
 
 
-def selected_label_changed(label):
-    config["selected_labels"].add(label)
+def selected_feature_changed(event):
+    uniquely_add(event, config["selected_features"])
+
+
+def selected_label_changed(event):
+    uniquely_add(event, config["selected_labels"])
 
 
 def eta_changed(value):
@@ -43,11 +56,13 @@ def include_bias_changed(value):
 def sumbit_handler():
     task.run(config)
 
+
 builder = InterfaceBuilder(title="Single layer preceptron", data=None)
 builder.lay_cmb_selection(
     "Feature Selection", task.features, 2, selected_feature_changed
 )
-builder.lay_cmb_selection("Label Selection", task.labels, 2, selected_label_changed)
+builder.lay_cmb_selection(
+    "Label Selection", task.labels, 2, selected_label_changed)
 builder.add_entry("Learning Rate", lambda x: eta_changed(x.get()))
 builder.add_entry("Epochs", lambda x: epochs_changed(x.get()))
 builder.add_checkbox("Include Bias", include_bias_changed)

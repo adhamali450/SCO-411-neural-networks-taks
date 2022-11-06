@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 
+
 class InterfaceBuilder:
     common_style = {
         'padx': 10,
@@ -25,10 +26,11 @@ class InterfaceBuilder:
         tk.Label(frame, text=text).grid(column=0, padx=10)
 
         for i in range(max):
-            cmb = ttk.Combobox(frame, values=selectable)
+            cmb = ttk.Combobox(frame, values=selectable, name=str(i))
             cmb.set("Item " + str(i + 1))
+
             cmb.bind("<<ComboboxSelected>>",
-                     lambda event: handler(event.widget.get()))
+                     lambda event: handler(event))
             cmb.grid(row=0, column=i + 1, padx=5)
 
         self.curr_row += 1
