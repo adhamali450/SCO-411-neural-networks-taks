@@ -22,8 +22,6 @@ def uniquely_add(cmb_event, dict):
 
     dict[id] = val
 
-    print(dict)
-
 
 def selected_feature_changed(event):
     uniquely_add(event, config["selected_features"])
