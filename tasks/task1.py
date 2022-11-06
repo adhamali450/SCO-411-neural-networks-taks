@@ -2,6 +2,7 @@ from models.perceptron import Perceptron
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from utils.confusion_matrix import ConfusionMatrix
+import matplotlib.pyplot as plt
 
 
 class Task1:
@@ -12,8 +13,6 @@ class Task1:
 
     def run(self, config) -> None:
 
-        # TODO : visualizations for report
-        # Write visualizations code here
 
         # fill nulls values in gender
         self.df = self.df.fillna("Unknown")
@@ -23,6 +22,45 @@ class Task1:
         gender_encoder = LabelEncoder()
         gender_encoder.fit(self.df["gender"])
 
+
+
+        ########################################
+
+         # for dataset visualization before training
+
+        self.df.iloc[8, 4] = 'male'
+        self.df.iloc[9, 4] = 'male'
+        self.df.iloc[10, 4] = 'male'
+
+        self.df.iloc[11, 4] = 'female'
+        self.df.iloc[47, 4] = 'female'
+        self.df.iloc[76, 4] = 'female'
+
+        '''
+        for i in range(1, 6):
+            for j in range(i + 1, 6):
+                plt.figure('f1')
+                fit11 = self.df.iloc[0:50, i]
+                fit12 = self.df.iloc[0:50, j]
+
+                fit21 = self.df.iloc[50:100, i]
+                fit22 = self.df.iloc[50:100, j]
+
+                fit31 = self.df.iloc[100:150, i]
+                fit32 = self.df.iloc[100:150, j]
+
+                plt.scatter(fit11, fit12)
+                plt.scatter(fit21, fit22)
+                plt.scatter(fit31, fit32)
+
+                plt.xlabel(str(i))
+                plt.ylabel(str(j))
+                plt.show()
+        '''
+
+        ########################################
+
+        
         classes = list(config["selected_labels"])
         class1 = classes[0]
         class2 = classes[1]
