@@ -1,4 +1,3 @@
-from time import sleep
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -27,53 +26,6 @@ class Perceptron:
           L = t_i - self.y_i[i]
           self.weights = self.weights + lr * L * x_i
           self.b = self.b + lr * L 
-
-    ########################################
-
-    # for dataset visualization after training
-    
-    if self.bias == False:
-      plotbias=0
-    else:
-      plotbias = self.b
-
-    plt.figure('f1')
-    plotbias=self.b
-
-    fit11 = self.X.iloc[0:30, 0]
-    fit12 = self.X.iloc[0:30, 1]
-
-    fit21 = self.X.iloc[30:60, 0]
-    fit22 = self.X.iloc[30:60, 1]
-
-    plt.scatter(fit11, fit12)
-    plt.scatter(fit21, fit22)
-
-    x1Valus=[]
-    x2Values=[]
-
-    x1Valus.append(self.X.iloc[0, 0])
-    x1Valus.append(self.X.iloc[1, 0])
-    x1Valus.append(self.X.iloc[2, 0])
-    x1Valus.append(50)
-
-    x1Valus.append(self.X.iloc[40, 0])
-    x1Valus.append(self.X.iloc[41, 0])
-    x1Valus.append(self.X.iloc[42, 0])
-
-    #if self.bias != False:
-    #  x1Valus.append(0)
-
-    for i in x1Valus:
-      x2Values.append(((-plotbias) - (self.weights[0] * i))/self.weights[1])
-
-    plt.plot(x1Valus, x2Values)
-    colNames=self.X.columns.tolist()
-    plt.xlabel(str(colNames[0]))
-    plt.ylabel(str(colNames[1]))
-    plt.show()
-
-    ########################################
 
   def predict(self, X : pd.DataFrame) -> np.ndarray:
     
