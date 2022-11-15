@@ -1,5 +1,6 @@
 from InterfaceBuilder import InterfaceBuilder
 from tasks.task1 import Task1
+from tasks.task2 import Task2
 
 config = {
     "selected_features": {},
@@ -9,8 +10,8 @@ config = {
     "include_bias": False,
 }
 
-task = Task1()
-
+#task = Task1()
+task = Task2()
 
 def uniquely_add(cmb_event, dict):
     val = cmb_event.widget.get()

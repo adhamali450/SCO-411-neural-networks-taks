@@ -21,7 +21,7 @@ class Adaline:
         v = np.dot(self.weights.T, x_i)
         if self.bias:
           v += self.b
-        self.y_i[i] = np.sign(v)
+        self.y_i[i] = v
         L = t_i - self.y_i[i]
         self.weights = self.weights + lr * L * x_i
         self.b = self.b + lr * L
