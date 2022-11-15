@@ -11,7 +11,7 @@ class Task1:
         self.labels = list(set(self.df["species"]))
         self.features = list(set(self.df.drop(["species"], axis=1).columns))
 
-    def visualize(self, config) -> None:
+    def visualize(self) -> None:
         ########################################
 
         # for dataset visualization after training
@@ -116,3 +116,4 @@ class Task1:
         print("acc :", cm.accuracy())
         print("per :", cm.precision())
         print("recall :", cm.recall())
+        self.visualize()

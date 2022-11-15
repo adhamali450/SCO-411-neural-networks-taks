@@ -1,5 +1,6 @@
 from models.adaline import Adaline
 import pandas as pd
+import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from utils.confusion_matrix import ConfusionMatrix
 import matplotlib.pyplot as plt
@@ -72,11 +73,9 @@ class Task2:
         # print("acc :", cm.accuracy())
         # print("per :", cm.precision())
         # print("recall :", cm.recall())
-        sum = 0
-        print ()
-        for i in range (len(y_pred)):
-          if (y_pred[i] == Y_test.values[i]):
-            sum += 1
         print(y_pred)
         print(Y_test.values)
-        print(sum / len(y_pred))
+        accuracy = np.mean(Y_test == y_pred)
+        mse = np.mean((y_pred - Y_test)**2)/2
+        print(accuracy)
+        print(mse)
