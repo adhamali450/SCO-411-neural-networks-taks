@@ -1,6 +1,8 @@
 from InterfaceBuilder import InterfaceBuilder
 from tasks.task1 import Task1
 from tasks.task2 import Task2
+import os
+os.system('cls')
 
 config = {
     "selected_features": {},
@@ -8,10 +10,12 @@ config = {
     "eta": 0.01,
     "epochs": 100,
     "include_bias": False,
+    "mse_threshold": 0.1
 }
 
 #task = Task1()
 task = Task2()
+
 
 def uniquely_add(cmb_event, dict):
     val = cmb_event.widget.get()
@@ -48,6 +52,14 @@ def epochs_changed(value):
         pass
 
 
+def mse_threshold_changed(value):
+    try:
+        x = float(value)
+        config["mse_threshold"] = x
+    except:
+        pass
+
+
 def include_bias_changed(value):
     config["include_bias"] = value == 1
 
@@ -64,6 +76,7 @@ builder.lay_cmb_selection(
     "Label Selection", task.labels, 2, selected_label_changed)
 builder.add_entry("Learning Rate", lambda x: eta_changed(x.get()))
 builder.add_entry("Epochs", lambda x: epochs_changed(x.get()))
+builder.add_entry("MSE threshold", lambda x: mse_threshold_changed(x.get()))
 builder.add_checkbox("Include Bias", include_bias_changed)
 builder.add_btn("Train", sumbit_handler)
 builder.show()
