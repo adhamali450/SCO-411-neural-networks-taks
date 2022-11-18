@@ -1,7 +1,7 @@
 from InterfaceBuilder import InterfaceBuilder
 from tasks.task2 import Task2
 import os
-os.system('cls')
+os.system('cls' if os.name == 'nt' else 'clear')
 
 config = {
     "selected_features": {},
