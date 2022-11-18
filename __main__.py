@@ -1,5 +1,4 @@
 from InterfaceBuilder import InterfaceBuilder
-from tasks.task1 import Task1
 from tasks.task2 import Task2
 
 config = {
@@ -10,8 +9,8 @@ config = {
     "include_bias": False,
 }
 
-#task = Task1()
 task = Task2()
+
 
 def uniquely_add(cmb_event, dict):
     val = cmb_event.widget.get()
@@ -60,8 +59,7 @@ builder = InterfaceBuilder(title="Single layer preceptron", data=None)
 builder.lay_cmb_selection(
     "Feature Selection", task.features, 2, selected_feature_changed
 )
-builder.lay_cmb_selection(
-    "Label Selection", task.labels, 2, selected_label_changed)
+builder.lay_cmb_selection("Label Selection", task.labels, 2, selected_label_changed)
 builder.add_entry("Learning Rate", lambda x: eta_changed(x.get()))
 builder.add_entry("Epochs", lambda x: epochs_changed(x.get()))
 builder.add_checkbox("Include Bias", include_bias_changed)

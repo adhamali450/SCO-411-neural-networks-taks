@@ -1,10 +1,14 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-
 
 class Adaline:
-  def __init__(self, X : pd.DataFrame, Y : pd.DataFrame, bias=False, mse_threshold=0.1) -> None:
+  def __init__(self, X, Y, bias=False, mse_threshold=0.1) -> None:
+    try:
+      X = X.to_numpy(np.float32)
+      Y = Y.to_numpy(np.float32)
+    except:
+      pass
+    
     self.X = X
     self.Y = Y
     self.y = np.zeros(len(Y))
@@ -16,15 +20,16 @@ class Adaline:
   def train(self,lr=0.01, epochs=1000) -> None:
     for _ in range(epochs):
       for i in range(self.X.shape[0]):
-        x_i = self.X.iloc[i].values
-        t_i = self.Y.iloc[i]
+        x_i = self.X[i]
+        t_i = self.Y[i]
         v = np.dot(self.weights.T, x_i)
         if self.bias:
           v += self.b
         self.y[i] = v
         L = t_i - self.y[i]
         self.weights = self.weights + lr * L * x_i
-        self.b = self.b + lr * L
+        if self.bias:
+          self.b = self.b + lr * L
       mse = np.mean((self.y - self.Y)**2)/2
       if mse <= self.mse_threshold:
         break
