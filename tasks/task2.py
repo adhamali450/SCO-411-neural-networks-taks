@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from utils.confusion_matrix import ConfusionMatrix
-import matplotlib.pyplot as plt
+from utils.visualize import visualize
 
 
 class Task2:
@@ -12,7 +12,6 @@ class Task2:
         self.labels = list(set(self.df["species"]))
         self.features = list(set(self.df.drop(["species"], axis=1).columns))
 
-    
     def run(self, config) -> None:
         self.df = self.df.fillna("Unknown")
 
@@ -45,6 +44,8 @@ class Task2:
 
         # endregion
 
+        # region train_test split
+
         X_train = pd.concat(
             [
                 df1.drop(["species"], axis=1).iloc[:30],
@@ -63,19 +64,18 @@ class Task2:
         Y_test = pd.concat(
             [df1["species"].iloc[30:], df2["species"].iloc[30:]])
 
-        self.p = Adaline(X_train, Y_train, bias=config["include_bias"])
+        # endregion
+
+        self.p = Adaline(
+            X_train, Y_train, bias=config["include_bias"], mse_threshold=config["mse_threshold"])
 
         self.p.train(lr=config["eta"], epochs=config["epochs"])
 
         y_pred = self.p.predict(X_test)
 
-        # cm = ConfusionMatrix(Y_test, y_pred, 1, -1)
-        # print("acc :", cm.accuracy())
-        # print("per :", cm.precision())
-        # print("recall :", cm.recall())
-        print(y_pred)
-        print(Y_test.values)
-        accuracy = np.mean(Y_test == y_pred)
-        mse = np.mean((y_pred - Y_test)**2)/2
-        print(accuracy)
-        print(mse)
+        cm = ConfusionMatrix(Y_test, y_pred, 1, -1)
+        print("acc :", cm.accuracy())
+        print("per :", cm.precision())
+        print("recall :", cm.recall())
+
+        visualize(self.p)
