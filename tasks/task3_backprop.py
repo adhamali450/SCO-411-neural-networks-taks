@@ -14,6 +14,7 @@ class Task:
     def __init__(self, csv_path, label_col) -> None:
         self.df = pd.read_csv(csv_path)
         self.labels = list(set(self.df[label_col]))
+        self.label_col = label_col
         self.features = list(set(self.df.drop([label_col], axis=1).columns))
 
 
@@ -23,8 +24,9 @@ class Task3(Task):
 
     def run(self, config) -> None:
         self.df = self.df.fillna("Unknown")
+
         gender_encoder = LabelEncoder()
-        gender_encoder.fit(self.df["gender"])
+        self.df['gender'] = gender_encoder.fit_transform(self.df["gender"])
 
         species_encoder = OneHotEncoder()
         species = pd.DataFrame(species_encoder.fit_transform(
@@ -34,13 +36,13 @@ class Task3(Task):
 
         X_train = pd.concat(
             [
-                self.df.drop([self.label_col], axis=1).iloc[1:30],
+                self.df.drop([self.label_col], axis=1).iloc[0:30],
                 self.df.drop([self.label_col], axis=1).iloc[50:80],
                 self.df.drop([self.label_col], axis=1).iloc[100:130],
             ]
         )
         Y_train = pd.concat(
-            [species.iloc[1:30],
+            [species.iloc[0:30],
              species.iloc[50:80],
              species.iloc[100:130]])
 
@@ -67,11 +69,11 @@ class Task3(Task):
         # epochs=config["epochs"]
         self.model.train(epochs=1000)
 
-        y_pred = self.model.predict(X_test)
+        # self.model.predict(X_test)
 
-        cm = ConfusionMatrix(Y_test, y_pred, 1, -1)
-        print("acc :", cm.accuracy())
-        print("per :", cm.precision())
-        print("recall :", cm.recall())
+        # cm = ConfusionMatrix(Y_test, y_pred, 1, -1)
+        # print("acc :", cm.accuracy())
+        # print("per :", cm.precision())
+        # print("recall :", cm.recall())
 
-        visualize(self.p)
+        # visualize(self.p)

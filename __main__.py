@@ -1,5 +1,5 @@
 from InterfaceBuilder import InterfaceBuilder
-from tasks.task2 import Task2
+from tasks.task3_backprop import Task3
 import os
 os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -12,7 +12,7 @@ config = {
     "mse_threshold": 0.1
 }
 
-task = Task2()
+task = Task3()
 
 
 def uniquely_add(cmb_event, dict):
@@ -70,7 +70,8 @@ builder = InterfaceBuilder(title="Single layer preceptron", data=None)
 builder.lay_cmb_selection(
     "Feature Selection", task.features, 2, selected_feature_changed
 )
-builder.lay_cmb_selection("Label Selection", task.labels, 2, selected_label_changed)
+builder.lay_cmb_selection(
+    "Label Selection", task.labels, 2, selected_label_changed)
 builder.add_entry("Learning Rate", lambda x: eta_changed(x.get()))
 builder.add_entry("Epochs", lambda x: epochs_changed(x.get()))
 builder.add_entry("MSE threshold", lambda x: mse_threshold_changed(x.get()))
