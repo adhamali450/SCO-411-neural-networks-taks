@@ -8,7 +8,7 @@ config = {
     "size": [],
     "activation": "tanh",
     "eta": 0.0001,
-    "epochs": 1000,
+    "epochs": 5000,
     "include_bias": True,
 }
 
@@ -44,8 +44,8 @@ def include_bias_changed(value):
 
 
 def sumbit_handler():
-    print(config)
-    # task.run(config)
+
+    task.run(config)
 
 
 builder = InterfaceBuilder(title="Single layer preceptron", data=None)

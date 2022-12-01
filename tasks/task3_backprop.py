@@ -56,7 +56,7 @@ class Task3(Task):
         Y_test = pd.concat(
             [species.iloc[30:50],
              species.iloc[80:100],
-             species.iloc[80:100]])
+             species.iloc[130:151]])
 
         # endregion
 
@@ -64,10 +64,13 @@ class Task3(Task):
         # later should be specified from config (UI)
         # size=config["size"]
         self.model = Network(
-            train_test_data=(X_train, Y_train, X_test, Y_test), size=[8, 3], learning_rate=0.0001)
+            train_test_data=(X_train, Y_train, X_test, Y_test),
+             size=[int(config["size"][0]),int(config["size"][1])],
+              learning_rate=config["eta"],bias=config["include_bias"],
+              activation=config["activation"])
 
         # epochs=config["epochs"]
-        self.model.train(epochs=10000)
+        self.model.train(epochs=config["epochs"])
 
         self.model.predict()
 
