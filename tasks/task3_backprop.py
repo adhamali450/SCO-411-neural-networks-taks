@@ -80,11 +80,10 @@ class Task3(Task):
         
         Y_test = Y_test.reset_index()
         Y_test = Y_test.drop(["index"],axis=1)
-
         accuracy = 0
         for i in range (len(Y_predict)):
             if np.argmax(Y_predict[i]) == np.argmax(Y_test.iloc[i,:]):
                 accuracy += 1
-        print(accuracy / len(Y_predict))
+        print("Acc = " ,accuracy / len(Y_predict))
 
 
