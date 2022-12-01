@@ -7,7 +7,7 @@ activations = ['tanh', 'sigmoid']
 config = {
     "size": [],
     "activation": "tanh",
-    "eta": 0.0001,
+    "eta": 0.1,
     "epochs": 5000,
     "include_bias": True,
 }

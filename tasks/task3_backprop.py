@@ -23,15 +23,18 @@ class Task3(Task):
         super().__init__("data/penguins.csv", "species")
 
     def run(self, config) -> None:
+        
         self.df = self.df.fillna("Unknown")
-
         gender_encoder = LabelEncoder()
         self.df['gender'] = gender_encoder.fit_transform(self.df["gender"])
 
         species_encoder = OneHotEncoder()
         species = pd.DataFrame(species_encoder.fit_transform(
             self.df["species"].values.reshape(-1, 1)).toarray())
-
+        
+        #Normalize data
+        for i in range (1,self.df.shape[1]):
+            self.df.iloc[:,i] /= max(self.df.iloc[:,i])
         # region train test split
 
         X_train = pd.concat(
@@ -63,20 +66,25 @@ class Task3(Task):
         # [8, 3]: 2 layers, 8 neurons in hidden layer, 3 in the output
         # later should be specified from config (UI)
         # size=config["size"]
+        size = [int(x)for x in config["size"]]
+            
         self.model = Network(
             train_test_data=(X_train, Y_train, X_test, Y_test),
-             size=[int(config["size"][0]),int(config["size"][1])],
+             size=size,
               learning_rate=config["eta"],bias=config["include_bias"],
               activation=config["activation"])
 
-        # epochs=config["epochs"]
         self.model.train(epochs=config["epochs"])
 
         Y_predict = self.model.predict()
+        
+        Y_test = Y_test.reset_index()
+        Y_test = Y_test.drop(["index"],axis=1)
 
-        # cm = ConfusionMatrix(Y_test, y_pred, 1, -1)
-        # print("acc :", cm.accuracy())
-        # print("per :", cm.precision())
-        # print("recall :", cm.recall())
+        accuracy = 0
+        for i in range (len(Y_predict)):
+            if np.argmax(Y_predict[i]) == np.argmax(Y_test.iloc[i,:]):
+                accuracy += 1
+        print(accuracy / len(Y_predict))
 
-        # visualize(self.p)
+
