@@ -49,6 +49,16 @@ class Network:
     def __sigmoid(self, z):
         return 1 / (1 + np.exp(-z))
 
+    def __sigmoid_derivative(self, z):
+        sig = self.__sigmoid(z)
+        return sig * (1 - sig)
+
+    def __tanh_derivative(self, z):
+        return 1 - np.power(np.tanh(z), 2)
+
+    def __mse(self, y, y_hat):
+        return np.mean(np.square(y - y_hat))
+
     def prop_forward(self):
         for i in range(1, len(self.size) + 1):
             # Z = W * A + b
@@ -60,9 +70,11 @@ class Network:
             self.params[i]["A"] = np.tanh(self.params[i]["Z"])
 
     def prop_backward(self):
-        # handle output layer
-        # dZ = A - Y
+        #######################
+        # handle output layer #
+        #######################
 
+        # dZ = A - Y
         out_index = len(self.size)
         self.params[out_index]["dZ"] = self.params[out_index]["A"] - self.Y_train
 
@@ -75,15 +87,17 @@ class Network:
         self.params[out_index]["db"] = np.sum(
             self.params[out_index]["dZ"], axis=1, keepdims=True) / m
 
-        # handle hidden layers
+        ########################
+        # handle hidden layers #
+        ########################
 
         for i in range(out_index-1, 0, -1):
-            # dZ = np.dot(W_next.T, dZ_next) * (1 - np.power(A, 2))
+            # dZ = np.dot(W_next.T, dZ_next) * g'(Z)
             self.params[i]["dZ"] = \
                 np.dot(
                     self.params[i + 1]["W"].T,
                     self.params[i + 1]["dZ"]) * \
-                (1 - np.power(self.params[i]["A"], 2))
+                self.__tanh_derivative(self.params[i]["Z"])
 
             # dW = np.dot(dZ, A_prev.T) / m
             self.params[i]["dW"] = np.dot(
@@ -105,7 +119,9 @@ class Network:
             self.prop_backward()
             self.update_params()
 
-    def predict(self):
-        Aout = self.params[len(self.size)]["A"]
+            if (_ % 100 == 0):
+                print(
+                    f'MSE: {self.__mse(self.Y_train, self.params[len(self.size)]["A"])}')
 
-        print(Aout)
+    def predict(self):
+        pass

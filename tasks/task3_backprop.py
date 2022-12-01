@@ -67,9 +67,9 @@ class Task3(Task):
             train_test_data=(X_train, Y_train, X_test, Y_test), size=[8, 3], learning_rate=0.0001)
 
         # epochs=config["epochs"]
-        self.model.train(epochs=1000)
+        self.model.train(epochs=10000)
 
-        # self.model.predict(X_test)
+        self.model.predict()
 
         # cm = ConfusionMatrix(Y_test, y_pred, 1, -1)
         # print("acc :", cm.accuracy())
