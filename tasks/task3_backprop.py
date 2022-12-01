@@ -72,7 +72,7 @@ class Task3(Task):
         # epochs=config["epochs"]
         self.model.train(epochs=config["epochs"])
 
-        self.model.predict()
+        Y_predict = self.model.predict()
 
         # cm = ConfusionMatrix(Y_test, y_pred, 1, -1)
         # print("acc :", cm.accuracy())

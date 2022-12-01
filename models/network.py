@@ -74,7 +74,7 @@ class Network:
             if self.activation == "tanh" :
                 self.params[i]["A"] = np.tanh(self.params[i]["Z"])
             else:
-                self.params[i]["A"] = self.sigmoid(self.params[i]["Z"])
+                self.params[i]["A"] = self.__sigmoid(self.params[i]["Z"])
 
     def prop_backward(self):
         #######################
@@ -99,7 +99,10 @@ class Network:
 
         for i in range(out_index-1, 0, -1):
             # dZ = np.dot(W_next.T, dZ_next) * g'(Z)
-            self.params[i]["dZ"] = np.dot( self.params[i + 1]["W"].T,self.params[i + 1]["dZ"]) * self.__tanh_derivative(self.params[i]["Z"])
+            if self.activation == "tanh" :
+                self.params[i]["dZ"] = np.dot( self.params[i + 1]["W"].T,self.params[i + 1]["dZ"]) * self.__tanh_derivative(self.params[i]["Z"])
+            else :
+                self.params[i]["dZ"] = np.dot( self.params[i + 1]["W"].T,self.params[i + 1]["dZ"]) * self.__sigmoid_derivative(self.params[i]["Z"])
 
             # dW = np.dot(dZ, A_prev.T) / m
             self.params[i]["dW"] = np.dot(self.params[i]["dZ"], self.params[i - 1]["A"].T) / m
@@ -119,13 +122,43 @@ class Network:
             self.prop_backward()
             self.update_params()
 
-            if (_ % 100 == 0):
-                print(f'MSE: {self.__mse(self.Y_train, self.params[len(self.size)]["A"])}')
+            # if (_ % 100 == 0):
+            #     print(f'MSE: {self.__mse(self.Y_train, self.params[len(self.size)]["A"])}')
 
     def predict(self):
-        
+        A_temp = self.X_test
+        Z_temp = 0
         predictions = np.zeros((self.X_test.shape[0],self.X_test.shape[1]))
 
-        
+        for i in range(1, len(self.size) + 1):
 
-        return predictions
+            Z_temp = np.dot(self.params[i]["W"], A_temp) 
+            if self.bias:
+                Z_temp += self.params[i]["b"]
+
+            # A = tanh(Z)
+            if self.activation == "tanh" :
+                    A_temp= np.tanh(Z_temp)
+            else:
+                A_temp = self.__sigmoid(Z_temp)
+
+        predictions = A_temp.T
+        output = np.ndarray((predictions.shape))
+
+        
+        for i in range(predictions.shape[0]):
+            max = np.argmax(predictions[i])
+            # print(i,max)
+            if max == 0:
+                output[i][0] = 1
+                output[i][1] = 0
+                output[i][2] = 0
+            elif max == 1:
+                output[i][1] = 1
+                output[i][0] = 0
+                output[i][2] = 0
+            else :
+                output[i][2] = 1
+                output[i][0] = 0
+                output[i][1] = 0
+        return output
