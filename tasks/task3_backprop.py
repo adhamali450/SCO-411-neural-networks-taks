@@ -4,6 +4,12 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from utils.confusion_matrix import ConfusionMatrix
 from utils.visualize import visualize
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+from sklearn.metrics import classification_report
+import seaborn as sns
+ 
+
 
 # TODO: move to seperate file and apply to task1, task2
 # TODO: add other generic functions
@@ -76,14 +82,22 @@ class Task3(Task):
 
         self.model.train(epochs=config["epochs"])
 
-        Y_predict = self.model.predict()
+        Y_predict = pd.DataFrame( self.model.predict())
         
         Y_test = Y_test.reset_index()
         Y_test = Y_test.drop(["index"],axis=1)
-        accuracy = 0
-        for i in range (len(Y_predict)):
-            if np.argmax(Y_predict[i]) == np.argmax(Y_test.iloc[i,:]):
-                accuracy += 1
-        print("Acc = " ,accuracy / len(Y_predict))
 
+        print(classification_report(Y_test, Y_predict))
+
+        #Visualization
+        cm = confusion_matrix(Y_test.values.argmax(axis=1),Y_predict.values.argmax(axis=1))
+        plt.figure(figsize=(5,4))
+        sns.heatmap(cm, annot=True)
+        plt.title('Confusion Matrix')
+        plt.ylabel('Actal Values')
+        plt.xlabel('Predicted Values')
+        plt.show()
+        
+
+        
 
